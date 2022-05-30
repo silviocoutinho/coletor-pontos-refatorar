@@ -8,6 +8,7 @@ import os
 from dotenv import load_dotenv
 from Ponto import Ponto
 load_dotenv()
+<<<<<<< HEAD
 USER_ENV = os.getenv("USER")
 PASS_ENV = os.getenv("PASS")
 HOST_ENV = os.getenv("HOST")
@@ -16,6 +17,18 @@ DB_ENV   = os.getenv("DB")
 conectado = False
 try:
     conn = psycopg2.connect(host=HOST_ENV,user=USER_ENV, password=PASS_ENV, port=PORT_ENV, database= DB_ENV)
+=======
+
+conectado = False
+
+
+try:
+    conn = psycopg2.connect(user = "USERDB_ENV",
+                            password ="PASSDB_ENV",
+                            host = "HOST_ENV",
+                            port = "PORT_ENV ",
+                            database = "DB_ENV" )
+>>>>>>> 50aeb74d25ac44f4e7d4c5e6587806f6b9a6106d
     cur = conn.cursor()
     conectado = True
 
