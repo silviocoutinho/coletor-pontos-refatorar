@@ -4,17 +4,18 @@ import json
 import requests
 import psycopg2
 import re
-
+import os
+from dotenv import load_dotenv
 from Ponto import Ponto
-
+load_dotenv()
+USER_ENV = os.getenv("USER")
+PASS_ENV = os.getenv("PASS")
+HOST_ENV = os.getenv("HOST")
+PORT_ENV = os.getenv("PORT")
+DB_ENV   = os.getenv("DB")
 conectado = False
-
 try:
-    conn = psycopg2.connect(user = "postgres",
-                                  password = "senha_aqui",
-                                  host = "localhost",
-                                  port = "5423",
-                                  database = "pontos")
+    conn = psycopg2.connect(host=HOST_ENV,user=USER_ENV, password=PASS_ENV, port=PORT_ENV, database= DB_ENV)
     cur = conn.cursor()
     conectado = True
 
