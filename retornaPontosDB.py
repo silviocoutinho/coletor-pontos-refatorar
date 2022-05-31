@@ -8,33 +8,22 @@ import os
 from dotenv import load_dotenv
 from Ponto import Ponto
 load_dotenv()
-<<<<<<< HEAD
-<<<<<<< HEAD
-USER_ENV = os.getenv("USER")
-PASS_ENV = os.getenv("PASS")
-HOST_ENV = os.getenv("HOST")
-PORT_ENV = os.getenv("PORT")
+
+USERDB = ''
+DB = ''
+PASSDB = ''
+DB_SERVER = ''
+DB_PORT = ''
+
+USER_ENV = os.getenv("USERDB")
+PASS_ENV = os.getenv("PASSDB")
+HOST_ENV = os.getenv("DB_SERVER")
+PORT_ENV = os.getenv("DB_PORT")
 DB_ENV   = os.getenv("DB")
 conectado = False
+
 try:
     conn = psycopg2.connect(host=HOST_ENV,user=USER_ENV, password=PASS_ENV, port=PORT_ENV, database= DB_ENV)
-=======
-=======
->>>>>>> 50aeb74d25ac44f4e7d4c5e6587806f6b9a6106d
-
-conectado = False
-
-
-try:
-    conn = psycopg2.connect(user = "USERDB_ENV",
-                            password ="PASSDB_ENV",
-                            host = "HOST_ENV",
-                            port = "PORT_ENV ",
-                            database = "DB_ENV" )
-<<<<<<< HEAD
->>>>>>> 50aeb74d25ac44f4e7d4c5e6587806f6b9a6106d
-=======
->>>>>>> 50aeb74d25ac44f4e7d4c5e6587806f6b9a6106d
     cur = conn.cursor()
     conectado = True
 
@@ -195,37 +184,55 @@ data = json.dumps(data)
 #ignora mensagens de erro de certificado SSL
 requests.packages.urllib3.disable_warnings()
 
-response = requests.post(url, data=data,headers={"Content-Type": "application/json"}, verify=False)
-payload = json.loads(response.text)
-session = payload['session']
+
+#########################################################################################
+##### DESABILITADO AS INSTRUCOES ABAIXO
+##### SERA FEITA UMA LEITURA VIA TXT
+#response = requests.post(url, data=data,headers={"Content-Type": "application/json"}, verify=False)
+#payload = json.loads(response.text)
+#session = payload['session']
 #=======Fim do procedimento de criacao da sessao========
 
 
 #Retorna dos pontos a partir de uma nsr ===> numero sequencial de registro
 ultimo_NSR = ultimoNSR()
+print('ULTIMO NSR, OBTIDO VIA SQL:', ultimo_NSR)
 
-data = {'initial_nsr' : ultimo_NSR }
-data = json.dumps(data)
-url = 'localhost/get_afd.fcgi?session='  + session
-response = requests.post(url, data=data, headers={"Content-Type": "application/json"}, verify=False)
+#data = {'initial_nsr' : ultimo_NSR }
+#ata = json.dumps(data)
+#url = 'localhost/get_afd.fcgi?session='  + session
+#response = requests.post(url, data=data, headers={"Content-Type": "application/json"}, verify=False)
 
-lines = response.iter_lines()
-first_line = next(lines)
+#lines = response.iter_lines()
+#first_line = next(lines)
+
+################ FIM DA LEITURA VIA WEB-SERVICES
+###########################################################################################
+
+############################################################################3
+##### LEITURA VIA TXT
+
+lines = open("afd.txt", "r")
+
+##### FIM DA LEITURA VIA TXT
+#############################################################################
+
+# Regex para PIS
 patternPIS = re.compile(r'(\d{3})(\d{5})(\d{2})(\d{1})')
 replacePIS = r'\1.\2.\3-\4'     
 #          NSR                data                  hora                  PIS
 for line in lines:
     if line[36:38]:       
-        print(line[23:34].decode("utf-8"))
-        
-        ponto=Ponto(line[0:9].decode("utf-8"), line[10:18].decode("utf-8"), line[18:22].decode("utf-8"), line[23:34].decode("utf-8"))
+                
+        #ponto=Ponto(line[0:9].decode("utf-8"), line[10:18].decode("utf-8"), line[18:22].decode("utf-8"), line[23:34].decode("utf-8"))
+        ponto=Ponto(line[0:9], line[10:18], line[18:22], line[23:34])
         print(ponto) 
         gravaPontoAFD(ponto)
         ultimo_NSR = ponto.getNSR
 
 gravaPonto()
-atualizaDadosUltimoNSR(ultimo_NSR)
-apagaDadosPontosAFD()
+#atualizaDadosUltimoNSR(ultimo_NSR)
+#apagaDadosPontosAFD()
 
 if conectado:
     cur.close()
