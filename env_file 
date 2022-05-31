@@ -1,0 +1,5 @@
+USERDB = ''
+DB = ''
+PASSDB = ''
+DB_SERVER = ''
+DB_PORT = ''
